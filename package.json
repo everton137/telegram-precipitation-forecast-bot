@@ -1,0 +1,19 @@
+{
+  "name": "telegram-preciptation-forecast-bot",
+  "version": "1.0.0",
+  "description": "Bot to send the preciptation forecast each day for a specific city",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/everton137/telegram-preciptation-forecast-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/everton137/telegram-preciptation-forecast-bot/issues"
+  },
+  "homepage": "https://github.com/everton137/telegram-preciptation-forecast-bot#readme"
+}
