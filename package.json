@@ -4,7 +4,8 @@
   "description": "Bot to send the preciptation forecast each day for a specific city",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/everton137/telegram-preciptation-forecast-bot/issues"
   },
-  "homepage": "https://github.com/everton137/telegram-preciptation-forecast-bot#readme"
+  "homepage": "https://github.com/everton137/telegram-preciptation-forecast-bot#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-telegram-bot-api": "^0.40.0",
+    "nodemon": "^1.19.4"
+  }
 }
