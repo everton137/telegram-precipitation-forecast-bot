@@ -1,0 +1,3 @@
+// Copy this file to .env and set up your variables
+TELEGRAM_API_TOKEN=
+DARKSKY_API_KEY=
