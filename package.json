@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/everton137/telegram-preciptation-forecast-bot#readme",
   "dependencies": {
+    "axios": "^0.19.0",
     "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0",
     "node-telegram-bot-api": "^0.40.0",
     "nodemon": "^1.19.4"
   }
