@@ -23,6 +23,7 @@ async function getForecast(city) {
   return darkskyData;
 }
 
+
 // Bot /help
 bot.onText(/\/help/, msg => {
   // 'msg' is the received Message from Telegram
@@ -30,6 +31,7 @@ bot.onText(/\/help/, msg => {
 Type:
   /rain [city name] - to get the rain forecast for the next 7 days
   /temp [city name] - to get the current temperature
+  /maxmin [city name] - to get the higher and lower temperatures for the next 7 days
   `;
 
   bot.sendMessage(msg.chat.id, text);
@@ -45,12 +47,12 @@ bot.onText(/\/rain (.+)/, (msg, match) => {
   const city = match[1]; // the captured "city name"
   getForecast(city).then(resp => {
     let text = `
-The chance of rain in ${city} in the next 7 five days is:
+The chance of rain in ${city} in the next 7 days is:
  ${moment().format('ddd')}: ${Math.round(resp.currently.precipProbability * 100)}% (today)\n`;
-    for (let i=1; i < 7; i++) {
+    for (let i = 1; i < 7; i++) {
       text += ` ${moment().add(i, 'days').format('ddd')}: ${Math.round(resp.daily.data[i].precipProbability * 100)}% \n`;
     }
-    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown'};
+    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
 });
@@ -64,7 +66,28 @@ bot.onText(/\/temp (.+)/, (msg, match) => {
   const city = match[1]; // the captured "city name"
   getForecast(city).then(response => {
     let text = `Now it's *${response.currently.temperature} °C* in *${city}*`;
-    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown'};
+    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
+    axios.post(telegramUrl + 'sendMessage', sendMessageParams);
+  });
+});
+
+// Matches "/maxmin [city name]"
+bot.onText(/\/maxmin (.+)/, (msg, match) => {
+  // 'msg' is the received Message from Telegram
+  // 'match' is the result of executing the regexp above on the text content
+  // of the message
+
+  console.log('lala');
+
+  const city = match[1]; // the captured "city name"
+  getForecast(city).then(resp => {
+    let text = `
+The min and max temperatures in ${city} in the next 7 days are: \n`;
+    for (let i = 0; i < 7; i++) {
+      text += ` ${moment().add(i, 'days').format('ddd')}: ${resp.daily.data[i].temperatureLow} / ${resp.daily.data[i].temperatureHigh} (°C) \n`;
+    }
+    console.log(text);
+    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
 });
