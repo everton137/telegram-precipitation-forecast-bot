@@ -22,6 +22,20 @@ async function getForecast(city) {
   return darkskyData.currently;
 }
 
+// Bot /help
+bot.onText(/\/help/, msg => {
+  // 'msg' is the received Message from Telegram
+  text = `
+Type:
+  /city [city name]
+to get the current temperature.`;
+
+  bot.sendMessage(msg.chat.id, text);
+
+});
+
+
+
 // Matches "/city [city name]"
 bot.onText(/\/city (.+)/, (msg, match) => {
   // 'msg' is the received Message from Telegram
