@@ -30,8 +30,8 @@ bot.onText(/\/city (.+)/, (msg, match) => {
 
   const city = match[1]; // the captured "city name"
   getForecast(city).then(response => {
-    let text = `Now it's ${response.temperature} °C in ${city}`;
-    let sendMessageParams = { chat_id: msg.chat.id, text: text, pase_mode: 'Markdown'};
+    let text = `Now it's *${response.temperature} °C* in ${city}`;
+    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown'};
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
 
