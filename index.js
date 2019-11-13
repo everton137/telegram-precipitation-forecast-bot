@@ -23,6 +23,20 @@ async function getForecast(city) {
   return darkskyData;
 }
 
+// Source: https://gist.github.com/alisterlf/3490957
+function removeAccents(str) {
+  let accents = 'ÀÁÂÃÄÅàáâãäåßÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+  let accentsOut = "AAAAAAaaaaaaBOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+  str = str.split('');
+  str.forEach((letter, index) => {
+    let i = accents.indexOf(letter);
+    if (i != -1) {
+      str[index] = accentsOut[i];
+    }
+  })
+  return str.join('');
+}
+
 
 // Bot /help
 bot.onText(/\/help/, msg => {
@@ -45,8 +59,10 @@ bot.onText(/\/rain (.+)/, (msg, match) => {
   // 'match' is the result of executing the regexp above on the text content
   // of the message
 
-  const city = match[1]; // the captured "city name"
-  getForecast(city).then(resp => {
+  const city = match[1];
+  const cleanCity = removeAccents(match[1]); // the captured "city name"
+
+  getForecast(cleanCity).then(resp => {
     let text = `
 The chance of rain in ${city} in the next 7 days is:
  ${moment().format('ddd')}: ${Math.round(resp.currently.precipProbability * 100)}% (today)\n`;
@@ -65,7 +81,9 @@ bot.onText(/\/temp (.+)/, (msg, match) => {
   // of the message
 
   const city = match[1]; // the captured "city name"
-  getForecast(city).then(response => {
+  const cleanCity = removeAccents(match[1]);
+
+  getForecast(cleanCity).then(response => {
     let text = `Now it's *${response.currently.temperature} °C* in *${city}*`;
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
@@ -79,7 +97,9 @@ bot.onText(/\/maxmin (.+)/, (msg, match) => {
   // of the message
 
   const city = match[1]; // the captured "city name"
-  getForecast(city).then(resp => {
+  const cleanCity = removeAccents(match[1]);
+  
+  getForecast(cleanCity).then(resp => {
     let text = `
 The min and max temperatures in ${city} in the next 7 days are: \n`;
     for (let i = 0; i < 7; i++) {
