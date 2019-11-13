@@ -77,8 +77,6 @@ bot.onText(/\/maxmin (.+)/, (msg, match) => {
   // 'match' is the result of executing the regexp above on the text content
   // of the message
 
-  console.log('lala');
-
   const city = match[1]; // the captured "city name"
   getForecast(city).then(resp => {
     let text = `
@@ -86,7 +84,7 @@ The min and max temperatures in ${city} in the next 7 days are: \n`;
     for (let i = 0; i < 7; i++) {
       text += ` ${moment().add(i, 'days').format('ddd')}: ${resp.daily.data[i].temperatureLow} / ${resp.daily.data[i].temperatureHigh} (°C) \n`;
     }
-    console.log(text);
+
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
