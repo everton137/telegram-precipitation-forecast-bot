@@ -32,6 +32,7 @@ Type:
   /rain [city name] - to get the rain forecast for the next 7 days
   /temp [city name] - to get the current temperature
   /maxmin [city name] - to get the higher and lower temperatures for the next 7 days
+  /help - for this help message
   `;
 
   bot.sendMessage(msg.chat.id, text);
