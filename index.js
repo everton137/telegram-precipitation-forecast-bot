@@ -84,7 +84,9 @@ bot.onText(/\/temp (.+)/, (msg, match) => {
   const cleanCity = removeAccents(match[1]);
 
   getForecast(cleanCity).then(response => {
-    let text = `Now it's *${response.currently.temperature} °C* in *${city}*`;
+    let text = `
+Now it's *${response.currently.temperature}* °C (feels like *${response.currently.apparentTemperature}* °C) in *${city}*
+*Wind* - speed ${response.currently.windSpeed} (m/s), gust ${response.currently.windGust} (m/s), direction ${response.currently.windBearing}°`;
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
