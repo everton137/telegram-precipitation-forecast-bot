@@ -145,9 +145,9 @@ bot.onText(/\/maxmin (.+)/, (msg, match) => {
 
   getForecast(cityNoAccents).then(resp => {
     let text = `
-The higher and lower temperatures in ${city} in the next 7 days are: \n`;
+The higher and lower temperatures in *${city}* in the next 7 days are: \n`;
     for (let i = 0; i < 7; i++) {
-      text += ` ${moment().add(i, 'days').format('ddd')}: ${resp.daily.data[i].temperatureLow} / ${resp.daily.data[i].temperatureHigh} (°C) \n`;
+      text += ` ${moment().add(i, 'days').format('ddd')}: *${resp.daily.data[i].temperatureLow}* / *${resp.daily.data[i].temperatureHigh}* (°C) \n`;
     }
 
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
