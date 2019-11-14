@@ -126,9 +126,9 @@ bot.onText(/\/temp (.+)/, (msg, match) => {
     let text = `
 Now it's *${response.currently.temperature}* °C (feels like *${response.currently.apparentTemperature}* °C) in *${city}*
 Wind: speed *${(response.currently.windSpeed * 3.6).toFixed(1)}* (km/h), gust *${(response.currently.windGust * 3.6).toFixed(1)}* (km/h), direction *${degToCard(response.currently.windBearing)}*
+Sunrise/Sunset: *${moment.unix(response.daily.data[0].sunriseTime).format('HH:mm')}* / *${moment.unix(response.daily.data[0].sunsetTime).format('HH:mm')}*
 Humidity: *${Math.round(response.currently.humidity * 100)}%*, UV Index: *${response.currently.uvIndex}*
 `;
-//*Sunrise/Sunset*: ${moment(response.daily.data[0].sunriseTime).format('HH:mm')} / ${moment(response.daily.data[0].sunsetTime).format('HH:mm')}
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
