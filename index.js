@@ -62,10 +62,10 @@ bot.onText(/\/rain (.+)/, (msg, match) => {
 
   getForecast(cityNoAccents).then(resp => {
     let text = `
-The chance of rain in ${city} in the next 7 days is:
- ${moment().format('ddd')}: ${Math.round(resp.currently.precipProbability * 100)}% (today)\n`;
+The chance of rain in *${city}* in the next 7 days is:
+ ${moment().format('ddd')}: *${Math.round(resp.currently.precipProbability * 100)}%* - _today_\n`;
     for (let i = 1; i < 7; i++) {
-      text += ` ${moment().add(i, 'days').format('ddd')}: ${Math.round(resp.daily.data[i].precipProbability * 100)}% \n`;
+      text += ` ${moment().add(i, 'days').format('ddd')}: *${Math.round(resp.daily.data[i].precipProbability * 100)}%* \n`;
     }
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
