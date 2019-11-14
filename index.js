@@ -37,20 +37,18 @@ function removeAccents(str) {
   return str.join('');
 }
 
-
 // Bot /help
 bot.onText(/\/help/, msg => {
   // 'msg' is the received Message from Telegram
   text = `
 Type:
   /rain [city name] - to get the rain forecast for the next 7 days
-  /temp [city name] - to get the current temperature
+  /temp [city name] - to get the current weather information
   /maxmin [city name] - to get the higher and lower temperatures for the next 7 days
   /help - for this help message
   `;
 
   bot.sendMessage(msg.chat.id, text);
-
 });
 
 // Matches "/rain [city name]"
@@ -60,9 +58,9 @@ bot.onText(/\/rain (.+)/, (msg, match) => {
   // of the message
 
   const city = match[1];
-  const cleanCity = removeAccents(match[1]); // the captured "city name"
+  const cityNoAccents = removeAccents(match[1]); // the captured "city name"
 
-  getForecast(cleanCity).then(resp => {
+  getForecast(cityNoAccents).then(resp => {
     let text = `
 The chance of rain in ${city} in the next 7 days is:
  ${moment().format('ddd')}: ${Math.round(resp.currently.precipProbability * 100)}% (today)\n`;
@@ -81,12 +79,15 @@ bot.onText(/\/temp (.+)/, (msg, match) => {
   // of the message
 
   const city = match[1]; // the captured "city name"
-  const cleanCity = removeAccents(match[1]);
+  const cityNoAccents = removeAccents(match[1]);
 
-  getForecast(cleanCity).then(response => {
+  getForecast(cityNoAccents).then(response => {
     let text = `
 Now it's *${response.currently.temperature}* °C (feels like *${response.currently.apparentTemperature}* °C) in *${city}*
-*Wind* - speed ${response.currently.windSpeed} (m/s), gust ${response.currently.windGust} (m/s), direction ${response.currently.windBearing}°`;
+Wind: speed *${(response.currently.windSpeed * 3.6).toFixed(1)}* (km/h), gust *${(response.currently.windGust * 3.6).toFixed(1)}* (km/h), direction *${response.currently.windBearing}*°
+Humidity: *${Math.round(response.currently.humidity * 100)}%*, UV Index: *${response.currently.uvIndex}*
+`;
+//*Sunrise/Sunset*: ${moment(response.daily.data[0].sunriseTime).format('HH:mm')} / ${moment(response.daily.data[0].sunsetTime).format('HH:mm')}
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
@@ -99,11 +100,11 @@ bot.onText(/\/maxmin (.+)/, (msg, match) => {
   // of the message
 
   const city = match[1]; // the captured "city name"
-  const cleanCity = removeAccents(match[1]);
-  
-  getForecast(cleanCity).then(resp => {
+  const cityNoAccents = removeAccents(match[1]);
+
+  getForecast(cityNoAccents).then(resp => {
     let text = `
-The min and max temperatures in ${city} in the next 7 days are: \n`;
+The higher and lower temperatures in ${city} in the next 7 days are: \n`;
     for (let i = 0; i < 7; i++) {
       text += ` ${moment().add(i, 'days').format('ddd')}: ${resp.daily.data[i].temperatureLow} / ${resp.daily.data[i].temperatureHigh} (°C) \n`;
     }
