@@ -52,6 +52,5 @@ exports.degToCard = function(deg) {
     } else {
         direction = 'N';
     }
-    console.log(deg);
     return direction;
 }
