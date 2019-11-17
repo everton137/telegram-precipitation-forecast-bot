@@ -82,6 +82,26 @@ Humidity: *${Math.round(response.currently.humidity * 100)}%*, UV Index: *${resp
   });
 });
 
+// Matches "/rh [city name]"
+bot.onText(/\/rh (.+)/, (msg, match) => {
+  // 'msg' is the received Message from Telegram
+  // 'match' is the result of executing the regexp above on the text content
+  // of the message
+
+  const city = match[1]; // the captured "city name"
+  const cityNoAccents = aux.removeAccents(match[1]);
+
+  getForecast(cityNoAccents).then(response => {
+    let text = `The rain forecast (probability - intensity) in *${city}* in the next 24 hours is:\n`;
+    for (let i = 0; i < 24; i++) {
+      text += ` ${moment().add(i, 'h').tz(response.timezone).format('H[h]')} - *${Math.round(response.hourly.data[i].precipProbability * 100)}*%  ${response.hourly.data[i].precipProbability !== 0 ? '- *' + response.hourly.data[i].precipIntensity + '* mm/h' : ''} \n`;
+    }
+
+    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
+    axios.post(telegramUrl + 'sendMessage', sendMessageParams);
+  });
+});
+
 // Matches "/th [city name]"
 bot.onText(/\/th (.+)/, (msg, match) => {
   // 'msg' is the received Message from Telegram
