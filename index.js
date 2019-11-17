@@ -33,6 +33,7 @@ Type:
   /rain [city name] - to get the rain forecast for the next 7 days
   /temp [city name] - to get the current weather information
   /th [city name] - to get the temperature for the next 24 hours
+  /rh [city name] - to get the rain forecast for the next 24 hours
   /maxmin [city name] - to get the higher and lower temperatures for the next 7 days
   /help - for this help message
   `;
