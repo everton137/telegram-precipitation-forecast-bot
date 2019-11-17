@@ -8,20 +8,20 @@ const aux = require('./aux');
 const token = process.env.TELEGRAM_API_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 
-let telegramUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_API_TOKEN}/`
+const telegramUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_API_TOKEN}/`
 
 async function getForecast(city) {
   // Get geolocation from Nominatim OSM
-  let nominatimUrl = `https://nominatim.openstreetmap.org/search.php?q=${city}&format=json`;
-  let geolocation = {};
-  let nominatimResp = await axios.get(nominatimUrl);
-  let nominatimData = await nominatimResp.data;
+  const nominatimUrl = `https://nominatim.openstreetmap.org/search.php?q=${city}&format=json`;
+  const geolocation = {};
+  const nominatimResp = await axios.get(nominatimUrl);
+  const nominatimData = nominatimResp.data;
   geolocation.lat = nominatimData[0].lat;
   geolocation.lon = nominatimData[0].lon;
   // Get weather from Darksky
-  let darkskyUrl = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${geolocation.lat},${geolocation.lon}?units=si`;
-  let darkskyResp = await axios.get(darkskyUrl);
-  let darkskyData = await darkskyResp.data;
+  const darkskyUrl = `https://api.darksky.net/forecast/${process.env.DARKSKY_API_KEY}/${geolocation.lat},${geolocation.lon}?units=si`;
+  const darkskyResp = await axios.get(darkskyUrl);
+  const darkskyData = darkskyResp.data;
   return darkskyData;
 }
 
@@ -32,6 +32,7 @@ bot.onText(/\/help/, msg => {
 Type:
   /rain [city name] - to get the rain forecast for the next 7 days
   /temp [city name] - to get the current weather information
+  /th [city name] - to get the temperature for the next 24 hours
   /maxmin [city name] - to get the higher and lower temperatures for the next 7 days
   /help - for this help message
   `;
@@ -66,10 +67,8 @@ bot.onText(/\/temp (.+)/, (msg, match) => {
   // 'match' is the result of executing the regexp above on the text content
   // of the message
 
-
   const city = match[1]; // the captured "city name"
   const cityNoAccents = aux.removeAccents(match[1]);
-
 
   getForecast(cityNoAccents).then(response => {
     let text = `
@@ -78,6 +77,26 @@ Wind: speed *${(response.currently.windSpeed * 3.6).toFixed(1)}* (km/h), gust *$
 Sunrise/Sunset: *${moment.unix(response.daily.data[0].sunriseTime).tz(response.timezone).format('HH[h]mm')}* / *${moment.unix(response.daily.data[0].sunsetTime).tz(response.timezone).format('HH[h]mm')}*
 Humidity: *${Math.round(response.currently.humidity * 100)}%*, UV Index: *${response.currently.uvIndex}*
 `;
+    let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
+    axios.post(telegramUrl + 'sendMessage', sendMessageParams);
+  });
+});
+
+// Matches "/th [city name]"
+bot.onText(/\/th (.+)/, (msg, match) => {
+  // 'msg' is the received Message from Telegram
+  // 'match' is the result of executing the regexp above on the text content
+  // of the message
+
+  const city = match[1]; // the captured "city name"
+  const cityNoAccents = aux.removeAccents(match[1]);
+
+  getForecast(cityNoAccents).then(response => {
+    let text = `The temperature (feeling) in *${city}* in the next 24 hours is:\n`;
+    for (let i = 0; i < 24; i++) {
+      text += ` ${moment().add(i, 'h').format('H[h]')} - *${response.hourly.data[i].temperature}* (*${response.hourly.data[i].apparentTemperature}*) °C \n`;
+    }
+
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
     axios.post(telegramUrl + 'sendMessage', sendMessageParams);
   });
