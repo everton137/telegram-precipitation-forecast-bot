@@ -95,7 +95,7 @@ bot.onText(/\/rh (.+)/, (msg, match) => {
   getForecast(cityNoAccents).then(response => {
     let text = `The rain forecast (probability - intensity) in *${city}* in the next 24 hours is:\n`;
     for (let i = 0; i < 24; i++) {
-      text += ` ${moment().add(i, 'h').tz(response.timezone).format('H[h]')} - *${Math.round(response.hourly.data[i].precipProbability * 100)}*%  ${response.hourly.data[i].precipProbability !== 0 ? '- *' + response.hourly.data[i].precipIntensity + '* mm/h' : ''} \n`;
+      text += ` ${moment().add(i, 'h').tz(response.timezone).format('H[h]')}: *${Math.round(response.hourly.data[i].precipProbability * 100)}*%  ${response.hourly.data[i].precipProbability !== 0 ? '- *' + response.hourly.data[i].precipIntensity + '* mm/h' : ''} \n`;
     }
 
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
@@ -115,7 +115,7 @@ bot.onText(/\/th (.+)/, (msg, match) => {
   getForecast(cityNoAccents).then(response => {
     let text = `The temperature (feeling) in *${city}* in the next 24 hours is:\n`;
     for (let i = 0; i < 24; i++) {
-      text += ` ${moment().add(i, 'h').tz(response.timezone).format('H[h]')} - *${response.hourly.data[i].temperature}* (*${response.hourly.data[i].apparentTemperature}*) °C \n`;
+      text += ` ${moment().add(i, 'h').tz(response.timezone).format('H[h]')}: *${response.hourly.data[i].temperature}* (*${response.hourly.data[i].apparentTemperature}*) °C \n`;
     }
 
     let sendMessageParams = { chat_id: msg.chat.id, text: text, parse_mode: 'Markdown' };
