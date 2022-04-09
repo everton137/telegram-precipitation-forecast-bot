@@ -20,7 +20,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.27",
     "node-telegram-bot-api": "^0.40.0",
     "nodemon": "^1.19.4"
