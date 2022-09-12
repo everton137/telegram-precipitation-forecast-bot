@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/everton137/telegram-preciptation-forecast-bot#readme",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "dotenv": "^8.2.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.35",
